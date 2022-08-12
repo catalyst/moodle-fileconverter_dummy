@@ -1,4 +1,19 @@
-<?php declare(strict_types=1);
+<?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
 namespace fileconverter_dummy;
 
 defined('MOODLE_INTERNAL') || die();
@@ -6,9 +21,22 @@ defined('MOODLE_INTERNAL') || die();
 use core_files\conversion;
 use core_files\converter_interface;
 
+/**
+ * Dummy document converter class.
+ *
+ * @package   fileconverter_dummy
+ * @copyright 2017 Cameron Ball
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class converter implements converter_interface {
 
-    public function start_document_conversion(conversion $conversion) : self {
+    /**
+     * Emulate document conversion in progress and cook a dummy PDF file.
+     *
+     * @param   conversion $conversion Conversion object
+     * @return  $this
+     */
+    public function start_document_conversion(conversion $conversion) :self {
         global $CFG;
 
         require_once($CFG->libdir . '/pdflib.php');
@@ -27,31 +55,50 @@ class converter implements converter_interface {
                    ->set('statusmessage', 'Oh henlo')
                    ->update();
 
-        mtrace("Hello from start_document_conversion");
+        mtrace('Dummy conversion started.');
 
         return $this;
     }
 
-    public function poll_conversion_status(conversion $conversion) : self {
-        //if (rand(1,5) == 5) {
-            $conversion->set('status', conversion::STATUS_COMPLETE);
-            mtrace("Hello from poll_conversion_status. The conversion is complete!");
-        //} else {
-        //    mtrace("Hello from poll_onversion_status. The conversion is still ongoing.");
-        //}
+    /**
+     * Poll an existing conversion for status update.
+     *
+     * @param   conversion $conversion The file to be converted
+     * @return  $this
+     */
+    public function poll_conversion_status(conversion $conversion) :self {
+        $conversion->set('status', conversion::STATUS_COMPLETE);
+        mtrace('Dummy conversion completed.');
 
         return $this;
     }
 
-    public static function are_requirements_met() : bool {
+    /**
+     * Whether the plugin is configured and requirements are met.
+     *
+     * @return  bool
+     */
+    public static function are_requirements_met() :bool {
         return true;
     }
 
-    public static function supports($from, $to) : bool {
+    /**
+     * Whether a file conversion can be completed using this converter.
+     *
+     * @param   string $from The source type
+     * @param   string $to The destination type
+     * @return  bool
+     */
+    public static function supports($from, $to) :bool {
         return true;
     }
 
-    public function get_supported_conversions() : string {
+    /**
+     * A list of the supported conversions.
+     *
+     * @return  string
+     */
+    public function get_supported_conversions() :string {
         return 'THE ALL OF THEM';
     }
 }
