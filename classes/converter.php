@@ -47,7 +47,30 @@ class converter implements converter_interface {
         $pdf->setPrintHeader(false);
         $pdf->setPrintFooter(false);
         $pdf->AddPage();
-        $pdf->Write(5, $conversion->get_sourcefile()->get_content());
+
+        $sourcefile = $conversion->get_sourcefile();
+        $mimetype = $sourcefile->get_mimetype();
+        switch ($mimetype) {
+            case 'text/plain':
+            case 'text/html':
+            case 'text/csv':
+                $pdf->Write(5, $sourcefile->get_content());
+                break;
+
+            case 'image/bmp':
+            case 'image/gif':
+            case 'image/jpeg':
+            case 'image/png':
+            case 'image/tiff':
+            case 'image/webp':
+                $pdf->Image('@' . $sourcefile->get_content());
+                break;
+
+            default:
+                $pdf->Write(5, 'Mock content for converted PDF file');
+                break;
+        }
+
         $pdf->Output($tmppdf, 'F');
 
         $conversion->store_destfile_from_path($tmppdf)
