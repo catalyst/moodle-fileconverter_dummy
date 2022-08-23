@@ -78,7 +78,11 @@ class converter implements converter_interface {
                    ->set('statusmessage', 'Oh henlo')
                    ->update();
 
-        mtrace('Dummy conversion started.');
+        if (defined('CLI_SCRIPT') && CLI_SCRIPT) {
+            mtrace('Dummy conversion started.');
+        } else {
+            error_log('Dummy conversion started.');
+        }
 
         return $this;
     }
@@ -91,7 +95,12 @@ class converter implements converter_interface {
      */
     public function poll_conversion_status(conversion $conversion) :self {
         $conversion->set('status', conversion::STATUS_COMPLETE);
-        mtrace('Dummy conversion completed.');
+
+        if (defined('CLI_SCRIPT') && CLI_SCRIPT) {
+            mtrace('Dummy conversion completed.');
+        } else {
+            error_log('Dummy conversion completed.');
+        }
 
         return $this;
     }
