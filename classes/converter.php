@@ -102,7 +102,10 @@ class converter implements converter_interface {
      * @return  bool
      */
     public static function are_requirements_met() :bool {
-        return true;
+        $requirementsmet = (bool)get_config('fileconverter_dummy', 'requirementsmet');
+        self::log("Requirements met: " . ($requirementsmet ? 'yes' : 'no'));
+
+        return $requirementsmet;
     }
 
     /**

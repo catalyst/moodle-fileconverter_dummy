@@ -15,15 +15,17 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for Dummy document converter.
+ * Settings for fileconverter_dummy.
  *
  * @package   fileconverter_dummy
- * @copyright 2017 Cameron Ball
+ * @copyright 2023 Cameron Ball <cameron@cameron1729.xyz>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-$string['pluginname'] = 'Dummy';
-$string['requirementsmet'] = 'Requirements met';
-$string['requirementsmet_desc'] = 'Used to simulate a situation where the converter is enabled but its requirements are not met. When this setting is off, core will see the Dummy converter as having unmet requirements, and will skip using it. Even if the plugin is enabled.';
+if ($hassiteconfig) {
+    $settings->add(new admin_setting_configcheckbox('fileconverter_dummy/requirementsmet',
+        get_string('requirementsmet', 'fileconverter_dummy'),
+        get_string('requirementsmet_desc', 'fileconverter_dummy'), 1));
+}
