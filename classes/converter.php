@@ -78,11 +78,7 @@ class converter implements converter_interface {
                    ->set('statusmessage', 'Oh henlo')
                    ->update();
 
-        if (defined('CLI_SCRIPT') && CLI_SCRIPT) {
-            mtrace('Dummy conversion started.');
-        } else {
-            error_log('Dummy conversion started.');
-        }
+        self::log('Dummy conversion started.');
 
         return $this;
     }
@@ -95,12 +91,7 @@ class converter implements converter_interface {
      */
     public function poll_conversion_status(conversion $conversion) :self {
         $conversion->set('status', conversion::STATUS_COMPLETE);
-
-        if (defined('CLI_SCRIPT') && CLI_SCRIPT) {
-            mtrace('Dummy conversion completed.');
-        } else {
-            error_log('Dummy conversion completed.');
-        }
+        self::log('Dummy conversion completed.');
 
         return $this;
     }
@@ -132,5 +123,13 @@ class converter implements converter_interface {
      */
     public function get_supported_conversions() :string {
         return 'THE ALL OF THEM';
+    }
+
+    private static function log(string $message): void {
+        if (defined('CLI_SCRIPT') && CLI_SCRIPT) {
+             mtrace($message);
+        } else {
+             error_log($message);
+        }
     }
 }
